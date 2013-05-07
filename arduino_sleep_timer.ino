@@ -1,11 +1,15 @@
 #include "remote_codes.h"
 
 // Countdown time, in milliseconds
-#define COUNTDOWN_MILLIS (1000 * 60 * 30)
+// 30 minutes. For some reason, the compiler
+// doesn't handle (1000 * 60 * 30) correctly,
+// resolving it to 30528
+#define COUNTDOWN_MILLIS 1800000
 // Cycle time for flashing lights
 #define FLASH_LIGHT_DELAY_MILLIS 250
 // Number of times to flash lights
 #define FLASH_LIGHT_COUNT 2
+
 
 #define SIGNAL_TO_MATCH CODE_PHILIPS_BLUE
 #define SIGNAL_TO_SEND CODE_PHILIPS_POWER
@@ -32,6 +36,9 @@ void loop() {
   if (CompareSignals(test, count, SIGNAL_TO_MATCH)) {
     Serial.println("Blue detected");
     FlashLights(FLASH_LIGHT_COUNT, FLASH_LIGHT_DELAY_MILLIS);
+    Serial.print("Asking for countdown of ");
+    Serial.print(COUNTDOWN_MILLIS, DEC);
+    Serial.print("\n");
     CountDown(COUNTDOWN_MILLIS);
     SendCode(SIGNAL_TO_SEND);
   }

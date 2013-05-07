@@ -1,3 +1,10 @@
+// LED control library, by Mark T. Tomczak
+// Public domain
+// To use:
+// * Call SetupLedControl with an array of LED inputs IDs
+//   (-1 terminates the array as a sentinel value)
+// * Call functions in the library to control the LEDs.
+
 // Control LED firing patterns
 // -1 used as sentinel value
 int *g_led_control_leds;
@@ -27,15 +34,16 @@ void FlashLights(int times, int flash_delay_millis) {
   }
 }
 
-void CountDown(int time_to_countdown_millis) {
+void CountDown(long time_to_countdown_millis) {
+  Serial.println(time_to_countdown_millis, DEC);
   unsigned long start_time = millis();
   // TODO(mtomczak): account for rollover after 50 days. You should probably build
   // a timer library with some structs to hold that state.
 
   for(
-    int time_elapsed = 0;
+    long time_elapsed = 0;
     time_elapsed < time_to_countdown_millis;
-    time_elapsed = (int)(millis() - start_time)) {
+    time_elapsed = (long)(millis() - start_time)) {
     float percent_remaining = (float)(time_to_countdown_millis - time_elapsed) / (float)(time_to_countdown_millis);
     float led_fraction = 1.0 / (float)(g_led_control_num_leds);
     for (int i=0; i < g_led_control_num_leds; i++) {
@@ -46,10 +54,7 @@ void CountDown(int time_to_countdown_millis) {
         } else { // percent remaining is in range led_fraction * (i, i+1)
           output = (int)((percent_remaining - (led_fraction * (float)(i))) * 255.0 / led_fraction);
         }
-      }
-      if (i==0) {
-        Serial.println(output);
-      }
+      }   
       
       analogWrite(g_led_control_leds[i], output);
     }    
