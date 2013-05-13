@@ -1,5 +1,7 @@
-// LED control library, by Mark T. Tomczak
-// Public domain
+// LED control library, by Mark T. Tomczak 
+// (iam@fixermark.com).
+// Public domain, released without warranty
+// for fitness for use in any purpose.
 // To use:
 // * Call SetupLedControl with an array of LED inputs IDs
 //   (-1 terminates the array as a sentinel value)
@@ -10,7 +12,9 @@
 int *g_led_control_leds;
 int g_led_control_num_leds = 0;
 
-// *leds is the arraay of LED pin IDs, terminated with a sentinel value of -1.
+// *leds is the arraay of LED pin IDs, 
+// terminated with a sentinel value of -1. All other functions
+// in this library affect these LEDs.
 void SetupLedControl(int *leds) {
   g_led_control_leds = leds;
   g_led_control_num_leds = 0;
@@ -21,6 +25,13 @@ void SetupLedControl(int *leds) {
   }
 }
 
+// Flash the lights "times" times, with a delay of
+// flash_delay_millis milleseconds between each on-off
+// pulse (so we take 2 * flash_delay_millis to flash one time).
+//
+// Note: Since we used delay here, not millis(), this isn't
+//  an extremely accurate timer; it will take slightly longer than
+//  times * 2 * flash_delay_millis to evaluate.
 void FlashLights(int times, int flash_delay_millis) {
   for(int i=0; i < times; i++) {
     for(int i=0; i < g_led_control_num_leds; i++) {
@@ -34,6 +45,9 @@ void FlashLights(int times, int flash_delay_millis) {
   }
 }
 
+// Wait for time_to_countdown_millis. As we wait,
+// slowly dim the lights, one by one, to indicate how much
+// time remains.
 void CountDown(long time_to_countdown_millis) {
   Serial.println(time_to_countdown_millis, DEC);
   unsigned long start_time = millis();

@@ -1,4 +1,7 @@
-// Authored by Mark Tomczak (iam@fixermark.com).
+// IR signal transmitter, by Mark T. Tomczak
+// (iam@fixermark.com).
+// Public domain, released without warranty
+// for fitness for use in any purpose.
 // Modified from Nikon camera demonstration code.
 // See the full tutorial at http://www.ladyada.net/learn/sensors/ir.html
 // this code is public domain, please enjoy!
@@ -31,12 +34,12 @@ void pulseIR(long microsecs) {
   sei();  // this turns them back on
 }
 
+// Pulse a code to an IR transmitter
+// Args:
+//  code_array: 1D array of pulse lengths denoted in 10s 
+//  of milliseconds: on, off, on, off, etc.
+//  Array is terminated by a 0 off code.
 void SendCode(int *code_array) {
-  // Pulse a code to an IR transmitter
-  // Args:
-  //  code_array: 1D array of pulse lengths denoted in 10s 
-  //  of milliseconds: on, off, on, off, etc.
-  //  Array is terminated by a 0 off code.
   uint8_t i;
   for(i = 0; code_array[i] != 0; i += 2) {
     pulseIR(code_array[i] * 10);

@@ -1,10 +1,13 @@
-// Authored by Mark Tomczak (iam@fixermark.com).
-// Listens for signals.
+// IR signal listener, by Mark T. Tomczak
+// (iam@fixermark.com).
+// Public domain, released without warranty
+// for fitness for use in any purpose.
+// Listens for signals from an IR detector.
 // Adapted from the tutorial at http://www.ladyada.net/learn/sensors/ir.html
 
 // We need to use the 'raw' pin reading methods
 // because timing is very important here and the digitalRead()
-// procedure is slower!
+// procedure is too slow.
 //uint8_t IRpin = 2;
 // Digital pin #2 is the same as Pin D2 see
 // http://arduino.cc/en/Hacking/PinMapping168 for the 'raw' pin mapping

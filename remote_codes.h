@@ -1,3 +1,11 @@
+// Philips remote control codes, by Mark T. Tomczak
+// (iam@fixermark.com).
+// Public domain, released without warranty
+// for fitness for use in any purpose.
+//
+// These codes were captured from a Philips TV remote
+// using https://github.com/fixermark/arduino_remote_signal_decoder
+
 // Power
 int CODE_PHILIPS_POWER[] = {
 // ON, OFF (in 10's of microseconds)
