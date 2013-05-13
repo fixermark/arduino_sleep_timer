@@ -34,15 +34,19 @@ int LEDS[] = {
   11, 10, 9, 6, -1
 };
 
+// Pin of the signal IR detector.
+int IR_LISTENER_LED = 2;
+
 // Pin-out of the infrared LED, used to
 // send remote control signals to the television.
-int IR_LED = 13;
+int IR_TRANSMITTER_LED = 13;
 
 void setup()   {       
   Serial.begin(9600);
   // Set up our libraries
   SetupLedControl(LEDS);
-  SetupTransmitter(IR_LED);
+  SetupSignalListener(IR_LISTENER_LED);
+  SetupTransmitter(IR_TRANSMITTER_LED);
   
   // Flash the lights to let user know that the
   // sleep timer is ready to listen.

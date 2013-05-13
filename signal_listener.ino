@@ -8,11 +8,9 @@
 // We need to use the 'raw' pin reading methods
 // because timing is very important here and the digitalRead()
 // procedure is too slow.
-//uint8_t IRpin = 2;
-// Digital pin #2 is the same as Pin D2 see
-// http://arduino.cc/en/Hacking/PinMapping168 for the 'raw' pin mapping
-#define IRpin_PIN      PIND
-#define IRpin          2
+
+// See http://arduino.cc/en/Hacking/PinMapping168 for the 'raw' pin mapping
+#define PIN_MAP      PIND
  
 // the maximum pulse we'll listen for - 65 milliseconds is a long time
 #define MAXPULSE 65000
@@ -24,6 +22,13 @@
 
 // What percentage of variance we allow between signal and target values.
 #define FUZZINESS 20
+
+int g_signal_listener_ir_pin = 0;
+
+// Initializes the signal listener library
+void SetupSignalListener(int signal_listener_ir_pin) {
+  g_signal_listener_ir_pin = signal_listener_ir_pin;
+}
 
 // Pulls in pulses and stores them in an array.
 // Args:
@@ -39,8 +44,8 @@ int listenForIR(uint16_t *input_array, int array_size) {
     uint16_t highpulse, lowpulse;  // temporary storage timing
     highpulse = lowpulse = 0; // start out with no pulse length
  
-//  while (digitalRead(IRpin)) { // this is too slow!
-    while (IRpin_PIN & (1 << IRpin)) {
+//  while (digitalRead(g_signal_listener_ir_pin)) { // this is too slow!
+    while (PIN_MAP & (1 << g_signal_listener_ir_pin)) {
        // pin is still HIGH
  
        // count off another few microseconds
@@ -58,7 +63,7 @@ int listenForIR(uint16_t *input_array, int array_size) {
     input_array[currentpulse] = highpulse;
     currentpulse++;
     // same as above
-    while (! (IRpin_PIN & _BV(IRpin))) {
+    while (! (PIN_MAP & _BV(g_signal_listener_ir_pin))) {
        // pin is still LOW
        lowpulse++;
        delayMicroseconds(RESOLUTION);

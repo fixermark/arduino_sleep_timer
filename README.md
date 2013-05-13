@@ -10,7 +10,7 @@ For more information about how to construct the hardware chassis for this
 project, see the following blog entries:
 *   [Mounting the controller and IR receiver](http://fixermark.blogspot.com/2013/05/return-of-arduino-part-1-mounting.html)
 *   [Mounting indicator LEDs](http://fixermark.blogspot.com/2013/05/return-of-arduino-part-2-status.html)
-*   Installing IR transmitter
+*   [Installing IR transmitter](http://fixermark.blogspot.com/2013/05/return-of-arduino-part-3-mount.html)
 
 # Usage
 
