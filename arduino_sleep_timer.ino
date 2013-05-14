@@ -15,7 +15,7 @@
 // 30 minutes. For some reason, the compiler
 // doesn't handle (1000 * 60 * 30) correctly,
 // resolving it to 30528
-#define COUNTDOWN_MILLIS 1800000
+#define COUNTDOWN_MILLIS 5000 //1800000
 // Cycle time for flashing lights
 #define FLASH_LIGHT_DELAY_MILLIS 250
 // Number of times to flash lights
@@ -60,6 +60,18 @@ void loop() {
   uint16_t test[200];
   int count;
   count = listenForIR(test, 200);
+  Serial.println("Test hears");
+  uint16_t *test2 = test;
+  while (test2[1] != 0) { 
+    Serial.print(*test2, DEC);
+    Serial.print(" ");
+    Serial.println(test2[1], DEC);
+    test2 += 2;
+  }
+  Serial.print(*test2, DEC);
+  Serial.print(" ");
+  Serial.println(test2[1], DEC);
+
   if (CompareSignals(test, count, SIGNAL_TO_MATCH)) {
     Serial.println("Matching signal detected");
 

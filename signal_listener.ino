@@ -63,7 +63,7 @@ int listenForIR(uint16_t *input_array, int array_size) {
     input_array[currentpulse] = highpulse;
     currentpulse++;
     // same as above
-    while (! (PIN_MAP & _BV(g_signal_listener_ir_pin))) {
+    while (! (PIN_MAP & (1 << g_signal_listener_ir_pin))) {
        // pin is still LOW
        lowpulse++;
        delayMicroseconds(RESOLUTION);
