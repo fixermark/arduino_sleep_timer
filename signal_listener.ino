@@ -11,23 +11,27 @@
 
 // See http://arduino.cc/en/Hacking/PinMapping168 for the 'raw' pin mapping
 #define PIN_MAP      PIND
- 
+
 // the maximum pulse we'll listen for - 65 milliseconds is a long time
 #define MAXPULSE 65000
- 
+
 // what our timing resolution should be, larger is better
 // as its more 'precise' - but too large and you wont get
 // accurate timing
-#define RESOLUTION 20 
+#define RESOLUTION 20
 
 // What percentage of variance we allow between signal and target values.
 #define FUZZINESS 20
 
-int g_signal_listener_ir_pin = 0;
+// Mask for listener IR pin.
+// Note: We store the mask instead of calculating 1 << g_signal_listener_ir_pin_mask
+// inside the listener function because the retrieve + left-shift takes too long
+// and throws off the timing.
+int g_signal_listener_ir_pin_mask = 0;
 
 // Initializes the signal listener library
 void SetupSignalListener(int signal_listener_ir_pin) {
-  g_signal_listener_ir_pin = signal_listener_ir_pin;
+  g_signal_listener_ir_pin_mask = 1 << signal_listener_ir_pin;
 }
 
 // Pulls in pulses and stores them in an array.
@@ -39,19 +43,19 @@ void SetupSignalListener(int signal_listener_ir_pin) {
 //   Number of pulses received.
 int listenForIR(uint16_t *input_array, int array_size) {
   uint8_t currentpulse = 0;
- 
+
   while (1) {
     uint16_t highpulse, lowpulse;  // temporary storage timing
     highpulse = lowpulse = 0; // start out with no pulse length
- 
-//  while (digitalRead(g_signal_listener_ir_pin)) { // this is too slow!
-    while (PIN_MAP & (1 << g_signal_listener_ir_pin)) {
+
+//  while (digitalRead(g_signal_listener_ir_pin_mask)) { // this is too slow!
+    while (PIN_MAP & g_signal_listener_ir_pin_mask) {
        // pin is still HIGH
- 
+
        // count off another few microseconds
        highpulse++;
        delayMicroseconds(RESOLUTION);
- 
+
        // If the pulse is too long, we 'timed out' - either nothing
        // was received or the code is finished, so print what
        // we've grabbed so far, and then reset
@@ -63,7 +67,7 @@ int listenForIR(uint16_t *input_array, int array_size) {
     input_array[currentpulse] = highpulse;
     currentpulse++;
     // same as above
-    while (! (PIN_MAP & (1 << g_signal_listener_ir_pin))) {
+    while (! (PIN_MAP & g_signal_listener_ir_pin_mask)) {
        // pin is still LOW
        lowpulse++;
        delayMicroseconds(RESOLUTION);
@@ -72,7 +76,7 @@ int listenForIR(uint16_t *input_array, int array_size) {
        }
     }
     input_array[currentpulse] = lowpulse;
- 
+
     // we read one high-low pulse successfully, continue!
     currentpulse++;
     if (currentpulse >= array_size) {
@@ -100,7 +104,7 @@ bool CompareSignals(uint16_t *signal, int signal_length, int *target) {
         return true;
       }
       int signal_code = signal[counter+1] * RESOLUTION / 10;
-      if (abs(signal_code - target[counter]) > 
+      if (abs(signal_code - target[counter]) >
         (signal_code * FUZZINESS / 100)) {
           signal++;
           signal_length--;

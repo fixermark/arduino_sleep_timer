@@ -15,7 +15,7 @@
 // 30 minutes. For some reason, the compiler
 // doesn't handle (1000 * 60 * 30) correctly,
 // resolving it to 30528
-#define COUNTDOWN_MILLIS 5000 //1800000
+#define COUNTDOWN_MILLIS 1800000
 // Cycle time for flashing lights
 #define FLASH_LIGHT_DELAY_MILLIS 250
 // Number of times to flash lights
